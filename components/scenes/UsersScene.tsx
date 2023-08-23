@@ -14,6 +14,7 @@ interface User {
 
 const UsersScene: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [value, setValue] = useState(20)
   const stripe = useStripe();
 
 
@@ -27,6 +28,7 @@ const UsersScene: React.FC = () => {
     const response = await fetch('/api', {
       body: JSON.stringify({
         customerId: user.stripeId,
+        amount: value
       }),
       method: 'POST',
     });
@@ -38,11 +40,20 @@ const UsersScene: React.FC = () => {
   return (
     <div>
       <h1>Users</h1>
+      <label htmlFor="amount">Choose an amount to pay:</label>
+      <select onChange={(ev) => setValue(+ev.target.value)} style={{ marginLeft: '20px' }} id="amount" value={value}>
+        {
+          [20, 30, 50, 100].map(item => (
+            <option key={item} value={item}>{item}</option>
+          ))
+        }
+      </select>
       <ul>
         {users.map(user => (
           <li key={user.id}>
             <p>{user.name} {user.surname}</p>
-            <button onClick={() => handlePay(user)}>Make payment</button>
+
+            <button style={{ marginLeft: '20px' }} onClick={() => handlePay(user)}>Make payment</button>
           </li>
         ))}
       </ul>

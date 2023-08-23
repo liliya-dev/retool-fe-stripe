@@ -9,7 +9,7 @@ const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY || '', {
 export  async function  POST (req: NextRequest, res: NextResponse) {
   const baseUrl = req.nextUrl.origin
     try {
-      const { customerId } = await req.json()
+      const { customerId, amount } = await req.json()
 
       const currency = 'eur';
       const lineItems = [
@@ -19,9 +19,9 @@ export  async function  POST (req: NextRequest, res: NextResponse) {
             currency,
             product_data: {
               name: 'Test',
-              description: `Seller is me`,
+              description: `Test seller`,
             },
-            unit_amount: 20 * 100
+            unit_amount: amount * 100
           },
         }
       ]
